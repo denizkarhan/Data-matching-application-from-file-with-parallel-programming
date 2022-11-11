@@ -6,8 +6,9 @@ def intro():
     C2 = int(input("Column Two->	"))
     SameProduct = int(input("Same Product [0-6](true) or (-1)(false)->	"))
     TargetRate = float(input("Target Rate->	"))
+    complaint_id = input("Compleint id->	")
     FILE_COUNT = int(input("Thread count->	"))
-    return C1, C2, SameProduct, TargetRate, FILE_COUNT
+    return C1, C2, SameProduct, complaint_id, TargetRate, FILE_COUNT
 
 def fileLen(fileName, FILE_COUNT):
     a = open(fileName, "r")
@@ -47,11 +48,13 @@ def similarity_rate(str1, str2, C1, C2):
 MatchFile = open("MatchFile.txt", "w")
 
 def File_finder(File_name, line, sub_thread_count, thread_id, sub_thread_id):
+    if (complaint_id not in line):
+        return 1
     while (1):
         ctrl_line = F[thread_id].readline()
         if (ctrl_line):
             if (SameProduct != -1):
-                if (line.split(", ")[SameProduct] != ctrl_line.split(", ")[SameProduct]):
+                if (line.split(", ")[SameProduct] not in ctrl_line):
             	    continue
             match = similarity_rate(ctrl_line, line, C1, C2)
             if (match > TargetRate):
@@ -84,8 +87,16 @@ def thread_start(Thread_count):
         END_TIME.append(end_time)
         t.join()
 
+with open("trashFile2", "r") as File:
+    a = File.readline()
+    lenn = (len(a.split(", ")))
+    if (lenn != 6):
+        print(a)
+    else:
+        print(lenn)
 
-C1, C2, SameProduct, TargetRate, FILE_COUNT = intro()
+C1, C2, SameProduct, complaint_id, TargetRate, FILE_COUNT = intro()
+
 START_TIME = []
 END_TIME = []
 
@@ -97,7 +108,6 @@ for i in range(FILE_COUNT):
     F.append(fileee)
 
 thread_start(FILE_COUNT)
-
 
 for i in range(len(START_TIME)):
     print(str(i + 1) + ".Thread one process time->	" + str(END_TIME[i] - START_TIME[i]))

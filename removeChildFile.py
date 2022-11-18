@@ -1,7 +1,10 @@
 import os
 
-for i in range(2, 200):
-    try:
-        os.remove("childFile{}".format(i))
-    except:
-        break
+def removeFile():
+    for i in range(1, 200):
+        try:
+            os.remove("childFile{}".format(i))
+        except:
+            break
+
+# removeFile()

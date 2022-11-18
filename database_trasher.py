@@ -24,6 +24,7 @@ def remove_stopwords(data):
 def file_reader():
     file = open(file_name, "r")
     file2 = open("trashFile2", "w")
+    file.readline()
     for j in file:
         a = j.split(",")
         element = ""
@@ -43,7 +44,7 @@ def file_reader():
         i = 0
         for s in c:
             if (i == 1 or i == 3 or i == 7 or i == 8 or i == 9 or i == 17):
-                if (len(s) < 1):
+                if (len(s) < 2):
                     continue
             i += 1
             try:
@@ -56,5 +57,5 @@ def file_reader():
     file2.close()
     file.close()
 
-multi_file_create()
+# multi_file_create()
 file_reader()

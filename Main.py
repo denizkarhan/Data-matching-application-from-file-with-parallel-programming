@@ -33,7 +33,7 @@ class Window(QtWidgets.QMainWindow):
         print(cb.isChecked())
 
     def filtre(self):
-        exampledict = {"C1":0, "C2":5, "SameProduct": -1, "match" : 0, "complaint_id":-1, "threadCount": 10}
+        exampledict = {"C1":0, "C2":5, "C3":0, "C4":5, "SameProduct": -1, "match" : 0, "complaint_id":-1, "threadCount": 10}
         result = ''
         items = self.ui.groupOran.findChildren(QtWidgets.QRadioButton)
         for cb in items:
@@ -70,9 +70,9 @@ class Window(QtWidgets.QMainWindow):
                 exampledict["match"] = 100
                 result += cb.text() + '\n'
  
-        items1 = self.ui.groupRows.findChildren(QtWidgets.QCheckBox)
+        items1 = self.ui.groupRows.findChildren(QtWidgets.QRadioButton)
         for cb1 in items1:
-            if cb1.isChecked() and cb1.text() == "Hepsi":
+            if cb1.isChecked() and cb1.text() == "Hiçbiri":
                 exampledict["SameProduct"] = -1
                 result += cb1.text() + '\n'
             elif cb1.isChecked() and cb1.text() == "Product":
@@ -95,29 +95,54 @@ class Window(QtWidgets.QMainWindow):
                 result += cb1.text() + '\n'
 
         items2 = self.ui.groupRows2.findChildren(QtWidgets.QCheckBox)
-        gosterilenAralik = []
+        arananAralik = []
         for cb2 in items2:
             if cb2.isChecked() and cb2.text() == "Hepsi":
-                gosterilenAralik = [0,1,2,3,4,5]
+                arananAralik = [0,1,2,3,4,5]
                 result += cb2.text() + '\n'
             elif cb2.isChecked() and cb2.text() == "Product":
-                gosterilenAralik.append(0)
+                arananAralik.append(0)
                 result += cb2.text() + '\n'
             elif cb2.isChecked() and cb2.text() == "Issue":
-                gosterilenAralik.append(1)
+                arananAralik.append(1)
                 result += cb2.text() + '\n'
             elif cb2.isChecked() and cb2.text() == "Company":
-                gosterilenAralik.append(2)
+                arananAralik.append(2)
                 result += cb2.text() + '\n'
             elif cb2.isChecked() and cb2.text() == "State":
-                gosterilenAralik.append(3)
+                arananAralik.append(3)
                 result += cb2.text() + '\n'
             elif cb2.isChecked() and cb2.text() == "Complaint ID":
-                gosterilenAralik.append(4)
+                arananAralik.append(4)
                 result += cb2.text() + '\n'
             elif cb2.isChecked() and cb2.text() == "Zip Code":
-                gosterilenAralik.append(5)
+                arananAralik.append(5)
                 result += cb2.text() + '\n'
+
+        items3 = self.ui.groupRows3.findChildren(QtWidgets.QCheckBox)
+        gosterilenAralik = []
+        for cb3 in items3:
+            if cb3.isChecked() and cb3.text() == "Hepsi":
+                gosterilenAralik = [0,1,2,3,4,5]
+                result += cb3.text() + '\n'
+            elif cb3.isChecked() and cb3.text() == "Product":
+                gosterilenAralik.append(0)
+                result += cb3.text() + '\n'
+            elif cb3.isChecked() and cb3.text() == "Issue":
+                gosterilenAralik.append(1)
+                result += cb3.text() + '\n'
+            elif cb3.isChecked() and cb3.text() == "Company":
+                gosterilenAralik.append(2)
+                result += cb3.text() + '\n'
+            elif cb3.isChecked() and cb3.text() == "State":
+                gosterilenAralik.append(3)
+                result += cb3.text() + '\n'
+            elif cb3.isChecked() and cb3.text() == "Complaint ID":
+                gosterilenAralik.append(4)
+                result += cb3.text() + '\n'
+            elif cb3.isChecked() and cb3.text() == "Zip Code":
+                gosterilenAralik.append(5)
+                result += cb3.text() + '\n'
 
         self.ui.label.setText(result)
         if self.ui.threadCount.text():
@@ -128,8 +153,10 @@ class Window(QtWidgets.QMainWindow):
             gosterilenAralik.sort()
             exampledict["C1"] = gosterilenAralik[0]
             exampledict["C2"] = gosterilenAralik[-1]
+            exampledict["C3"] = arananAralik[0]
+            exampledict["C4"] = arananAralik[-1]
         print(exampledict)
-        DATA = myThread.start_find(exampledict.get("C1"), exampledict.get("C2"), exampledict.get("SameProduct"), exampledict.get("match"), exampledict.get("complaint_id"), exampledict.get("threadCount"))
+        DATA = myThread.start_find(exampledict.get("C1"), exampledict.get("C2"), exampledict.get("C3"), exampledict.get("C4"),exampledict.get("SameProduct"), exampledict.get("match"), exampledict.get("complaint_id"), exampledict.get("threadCount"))
         removeChildFile.removeFile()
         self.loadProducts(DATA, gosterilenAralik[0], gosterilenAralik[-1])
 

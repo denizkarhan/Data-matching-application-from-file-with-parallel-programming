@@ -5,7 +5,7 @@ END_TIME = []
 DATA = []
 F = []
 
-NAME = ["Product", "Issue", "Company", "State", "Complaint ID", "Zip Code"]
+NAME = ["Product", "Issue", "Company", "State", "Zip Code", "Complaint ID"]
 
 ############     Partition the main file into as many files as there are threads     ############
 def create_multi_file(file_size):
@@ -73,8 +73,8 @@ def File_finder(File_name, line, sub_thread_count, thread_id, C1, C2, C3, C4, Sa
 ############     Create (100 / thread_count) sub-threds and send them to match check     ############
 def	sub_thread_start(File_name, line, thread_id, C1, C2, C3, C4, SameProduct, TargetRate, complaint_id, FILE_COUNT):
     T = []
-    for i in range(FILE_COUNT):
-        t = threading.Thread(target = File_finder, args = (File_name, line, int(100 / FILE_COUNT), thread_id, C1, C2, C3, C4, SameProduct, TargetRate, complaint_id, FILE_COUNT))
+    for i in range(5):
+        t = threading.Thread(target = File_finder, args = (File_name, line, int(1), thread_id, C1, C2, C3, C4, SameProduct, TargetRate, complaint_id, FILE_COUNT))
         T.append(t)
         t.start()
     for j in T:
@@ -82,6 +82,7 @@ def	sub_thread_start(File_name, line, thread_id, C1, C2, C3, C4, SameProduct, Ta
 
 ############     Create desired number of threads and send to sub-thread generation (100 / number of threads)     ############
 def thread_start(C1, C2, C3, C4, SameProduct, TargetRate, complaint_id, FILE_COUNT):
+    Total_time = time.time()
     line = "Checking savings account, Managing account, NAVY FEDERAL CREDIT UNION, FL, 328XX, 3198084"
     s = 0
     for i in range(FILE_COUNT):
@@ -102,6 +103,7 @@ def thread_start(C1, C2, C3, C4, SameProduct, TargetRate, complaint_id, FILE_COU
         F[s].close()
         s += 1
     F.clear()
+    print(time.time() - Total_time)
 
 ############     Function triggered by UI (User Interface)     ############
 def start_find(_C1, _C2, _C3, _C4, _SameProduct, _TargetRate, _complaint_id, _FILE_COUNT):

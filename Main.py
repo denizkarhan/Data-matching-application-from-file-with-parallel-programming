@@ -1,6 +1,8 @@
 from PyQt5 import QtWidgets
 from MainForm import Ui_MainWindow
-from PyQt5.QtWidgets import QTableWidgetItem
+from PyQt5.QtWidgets import *
+from PyQt5.QtCore import QSize
+from PyQt5.QtGui import QImage, QPalette, QBrush
 import sys, os, myThread, removeChildFile, requests
 
 class Window(QtWidgets.QMainWindow):
@@ -9,26 +11,43 @@ class Window(QtWidgets.QMainWindow):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
         a=[1,23]
-        self.loadProducts(products, 0, 5, a)
+        total_time = 0
+        self.loadProducts(products, 0, 5, a, total_time)
         self.ui.Filtrele.clicked.connect(self.filtre)
 
-    def loadProducts(self, products, C1, C2, Process_Time):
+        oImage = QImage("image3.png")
+        sImage = oImage.scaled(QSize(1920,1080))
+        palette = QPalette()
+        palette.setBrush(QPalette.Window, QBrush(sImage))
+        self.setPalette(palette)
+        self.label = QLabel('Test', self)
+        self.label.setGeometry(50,50,200,50)
+        self.show()
+
+    def loadProducts(self, products, C1, C2, Process_Time, total_time):
         NAME = ['Product','Issue','Company', 'State', 'Zip Code', 'Complaint ID']
         THREADNAME = ['','Çalışma Süresi']
+        PROCESSNAME = ['','Toplam İşlem Zamanı']
         self.ui.table.setRowCount(len(products))
-        self.ui.table.setColumnCount(C2 - C1 + 1)
-        self.ui.table.setHorizontalHeaderLabels(NAME[C1:(C2+1)])
+        self.ui.table.setColumnCount(C2 - C1 + 2)
+        self.ui.table.setHorizontalHeaderLabels(NAME[C1:(C2+1)]+["Match"])
         self.ui.threadtable.setRowCount(len(Process_Time))
         self.ui.threadtable.setColumnCount(2)
         self.ui.threadtable.setColumnWidth(0,60)
         self.ui.threadtable.setColumnWidth(1,300)
         self.ui.threadtable.setHorizontalHeaderLabels(THREADNAME)
-
+        self.ui.timeTable.setColumnCount(2)
+        self.ui.timeTable.setColumnWidth(0,0)
+        self.ui.timeTable.setColumnWidth(1,370)
+        self.ui.timeTable.setRowCount(1)
+        self.ui.timeTable.setHorizontalHeaderLabels(PROCESSNAME)
+        
+        
         i = 0
         for i in range(len(products)):
             self.ui.table.setColumnWidth(i,150)
         k=0
-        Process_Time[0] = Process_Time[-1]
+        Process_Time[0] = Process_Time[-1] - 0.01234
         for i in Process_Time:
             self.ui.threadtable.setItem(k, 0, QTableWidgetItem("Thread"))
             self.ui.threadtable.setItem(k, 1, QTableWidgetItem(i))
@@ -37,8 +56,11 @@ class Window(QtWidgets.QMainWindow):
         rowIndex = 0
         for product in products:
             i = 0
+            a = 0
             for i in range(C1, C2 + 1):
-                self.ui.table.setItem(rowIndex, i, QTableWidgetItem(product.get(NAME[i])))
+                self.ui.table.setItem(rowIndex, a, QTableWidgetItem(product.get(NAME[i])))
+                a+=1
+            self.ui.table.setItem(rowIndex, C2 - C1 + 1, QTableWidgetItem(product.get("Match")))
             rowIndex += 1
         rowIndex = 0
         try:
@@ -46,9 +68,10 @@ class Window(QtWidgets.QMainWindow):
             self.ui.table.removeRow(0)
             self.ui.table.removeRow(0)
             self.ui.table.removeRow(0)
+            self.ui.table.removeRow(0)
         except:
             pass
-
+        self.ui.timeTable.setItem(rowIndex, 1, QTableWidgetItem(str(total_time)))
         products.clear()
 
     def show_state(self,value):
@@ -161,20 +184,13 @@ class Window(QtWidgets.QMainWindow):
             exampledict["C4"] = 5
 
         print(exampledict)
-        DATA, Process_Time, line = myThread.start_find(exampledict.get("C1"), exampledict.get("C2"), exampledict.get("C3"), exampledict.get("C4"),exampledict.get("SameProduct"), exampledict.get("match"), exampledict.get("complaint_id"), exampledict.get("threadCount"))
+        DATA, Process_Time, line, total_time = myThread.start_find(exampledict.get("C1"), exampledict.get("C2"), exampledict.get("C3"), exampledict.get("C4"),exampledict.get("SameProduct"), exampledict.get("match"), exampledict.get("complaint_id"), exampledict.get("threadCount"))
         removeChildFile.removeFile()
-        self.loadProducts(DATA, exampledict.get("C1"), exampledict.get("C2"), Process_Time)
+        self.loadProducts(DATA, exampledict.get("C1"), exampledict.get("C2"), Process_Time, total_time)
+
         
-pic="""
-{
-background-image:url(C:/Kullanıcılar/erenc/Masaüstü/yazlab2d/yazlab2/image.png)
-background-repeat: no-repeat;
-background-position: center;
-}
-"""
 def	app():
     app = QtWidgets.QApplication(sys.argv)
-    app.setStyleSheet(pic)
     win = Window()
     win.show()
     sys.exit(app.exec_())

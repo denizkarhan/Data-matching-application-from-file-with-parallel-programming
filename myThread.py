@@ -6,6 +6,7 @@ DATA = []
 F = []
 
 NAME = ["Product", "Issue", "Company", "State", "Zip Code", "Complaint ID"]
+total_time = 0
 
 ############     Partition the main file into as many files as there are threads     ############
 def create_multi_file(file_size):
@@ -44,7 +45,7 @@ def InterFace_data(ctrl_line, C1, C2, match):
     D = {}
     for i in range(C1, C2+1):
         D.update({NAME[i]:S[i]})
-    D.update({"Match":match})
+    D.update({"Match":"%"+str(match)})
     return (D)
 
 ############     Print matching data to file     ############
@@ -64,7 +65,7 @@ def File_finder(File_name, line, sub_thread_count, thread_id, C1, C2, C3, C4, Sa
                     flag = 0
             if (flag == 1):
                 match = similarity_rate(ctrl_line, line, C3, C4)
-                if (match > TargetRate):
+                if (match >= TargetRate):
                     print(", ".join(ctrl_line.split(", ")[C1:C2+1]).strip(" \n\r\t"))
                     DATA.append(InterFace_data(ctrl_line, C1, C2, match))
         else:
@@ -82,7 +83,6 @@ def	sub_thread_start(File_name, line, thread_id, C1, C2, C3, C4, SameProduct, Ta
 
 ############     Create desired number of threads and send to sub-thread generation (100 / number of threads)     ############
 def thread_start(C1, C2, C3, C4, SameProduct, TargetRate, complaint_id, FILE_COUNT):
-    Total_time = time.time()
     line = "Checking savings account, Managing account, NAVY FEDERAL CREDIT UNION, FL, 328XX, 3198084"
     s = 0
     for i in range(FILE_COUNT):
@@ -103,10 +103,11 @@ def thread_start(C1, C2, C3, C4, SameProduct, TargetRate, complaint_id, FILE_COU
         F[s].close()
         s += 1
     F.clear()
-    print(time.time() - Total_time)
+    # print(total_time)
 
 ############     Function triggered by UI (User Interface)     ############
 def start_find(_C1, _C2, _C3, _C4, _SameProduct, _TargetRate, _complaint_id, _FILE_COUNT):
+    Total_time = time.time()
     ###	Split master file into (MAIN-FILE-SIZE / FILE-COUNT) equal parts
     create_multi_file(int(1074017 / int(_FILE_COUNT)))
     ###	Starting thread function
@@ -119,4 +120,5 @@ def start_find(_C1, _C2, _C3, _C4, _SameProduct, _TargetRate, _complaint_id, _FI
     i = 0
     START_TIME.clear()
     END_TIME.clear()
-    return (DATA, Process_Time, "Checking savings account, Managing account, NAVY FEDERAL CREDIT UNION, FL, 328XX, 3198084")
+    total_time = time.time() - Total_time
+    return (DATA, Process_Time, "Checking savings account, Managing account, NAVY FEDERAL CREDIT UNION, FL, 328XX, 3198084", total_time)

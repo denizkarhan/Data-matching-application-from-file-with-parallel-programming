@@ -45,6 +45,7 @@ class Window(QtWidgets.QMainWindow):
             self.ui.table.removeRow(0)
             self.ui.table.removeRow(0)
             self.ui.table.removeRow(0)
+            self.ui.table.removeRow(0)
         except:
             pass
 
@@ -82,7 +83,7 @@ class Window(QtWidgets.QMainWindow):
                 exampledict["match"] = 90
             elif cb.isChecked() and cb.text() == "% 100":
                 exampledict["match"] = 100
-        
+
         # %100 aynı sütunlar
         items1 = self.ui.groupRows.findChildren(QtWidgets.QRadioButton)
         for cb1 in items1:
@@ -96,9 +97,9 @@ class Window(QtWidgets.QMainWindow):
                 exampledict["SameProduct"] = 2
             elif cb1.isChecked() and cb1.text() == "State":
                 exampledict["SameProduct"] = 3
-            elif cb1.isChecked() and cb1.text() == "Complaint ID":
-                exampledict["SameProduct"] = 4
             elif cb1.isChecked() and cb1.text() == "Zip Code":
+                exampledict["SameProduct"] = 4
+            elif cb1.isChecked() and cb1.text() == "Complaint ID":
                 exampledict["SameProduct"] = 5
 
         # Aranılan Aralık
@@ -115,9 +116,9 @@ class Window(QtWidgets.QMainWindow):
                 arananAralik.append(2)
             elif cb2.isChecked() and cb2.text() == "State":
                 arananAralik.append(3)
-            elif cb2.isChecked() and cb2.text() == "Complaint ID":
-                arananAralik.append(4)
             elif cb2.isChecked() and cb2.text() == "Zip Code":
+                arananAralik.append(4)
+            elif cb2.isChecked() and cb2.text() == "Complaint ID":
                 arananAralik.append(5)
 
         # Gösterilen Aralık
@@ -134,9 +135,9 @@ class Window(QtWidgets.QMainWindow):
                 gosterilenAralik.append(2)
             elif cb3.isChecked() and cb3.text() == "State":
                 gosterilenAralik.append(3)
-            elif cb3.isChecked() and cb3.text() == "Complaint ID":
-                gosterilenAralik.append(4)
             elif cb3.isChecked() and cb3.text() == "Zip Code":
+                gosterilenAralik.append(4)
+            elif cb3.isChecked() and cb3.text() == "Complaint ID":
                 gosterilenAralik.append(5)
 
         if self.ui.threadCount.text():

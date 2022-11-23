@@ -47,7 +47,7 @@ class Window(QtWidgets.QMainWindow):
         for i in range(len(products)):
             self.ui.table.setColumnWidth(i,150)
         k=0
-        Process_Time[0] = Process_Time[-1] - 0.01234
+        Process_Time[0] = Process_Time[-1]
         for i in Process_Time:
             self.ui.threadtable.setItem(k, 0, QTableWidgetItem("Thread"))
             self.ui.threadtable.setItem(k, 1, QTableWidgetItem(i))
